@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {AuthRegisterService, AlertService} from '../../service/auth-register.service';
 import {Router} from '@angular/router';
 
+import {ValidationMessage} from '../../models/validationMessage';
 
 @Component({
   selector: 'app-register',
@@ -22,10 +23,14 @@ export class RegisterComponent implements OnInit {
     this.loading = true;
     this.registerService.create(this.model)
       .subscribe(
-        data => { console.log(data);
+        data => { const returnedMessage = <ValidationMessage> data;
+                      if (returnedMessage.success) {
 
             this.alertService.success('Registration successful', true);
             this.router.navigate(['/login']);
+        } else {
+             this.alertService.error(returnedMessage.msg);
+                      }
 
 
         },
